@@ -15,7 +15,7 @@ function makeRecursiveInherit(obj, mergeObj) {
     if(isFn(obj)) {
         inheritObj = function() {
             return obj.apply(this, toArray(arguments));
-        }
+        };
     }else{
         inheritObj = makeInherit(obj);
     }
