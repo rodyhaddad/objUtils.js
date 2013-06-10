@@ -1,0 +1,21 @@
+{
+    "name": "objUtils.js",
+    "version": "0.1.0",
+    "description": "JavaScript Object Utilities",
+    "main": "dist/objUtils.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/rodyhaddad/objUtils.js.git"
+    },
+    "keywords": [
+        "object", "utilities"
+    ],
+    "author": "rodyhaddad",
+    "license": "MIT",
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-jshint": "~0.4.3",
+        "grunt-contrib-concat": "~0.3.0"
+    }
+}
