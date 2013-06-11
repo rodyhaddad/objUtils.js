@@ -73,14 +73,13 @@ function toArray(obj) {
 }
 
 /**
- * Clean an array from a specific element
+ * Cleans an array from a specific element
  *
  * @param array An array to clean
- * @param [from=""] What should be removed from the array, by default an empty String
+ * @param from What should be removed from the array
  * @returns {Array} The cleaned array
  */
 function cleanArray(array, from) {
-    from = from || "";
     for(var i = array.length - 1; i >= 0; i--) {
         if(array[i] === from) {
             array.splice(i, 1);
