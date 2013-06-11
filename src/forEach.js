@@ -1,3 +1,12 @@
+/**
+ * Invokes the `iterator` function once for each item in `obj` collection, which can be either an object or an array.
+ * the `iterator` function is invoked with iterator(value, key|index), with it's `this` being the `context`
+ *
+ * @param {Object|Array} obj Object to iterate over
+ * @param {Function} iterator Iterator function
+ * @param [context] The context (`this`) for the iterator function
+ * @returns {*} The obj passed in
+ */
 function forEach(obj, iterator, context) {
     var key;
     if(obj) {
