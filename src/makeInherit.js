@@ -4,12 +4,26 @@ var _inherit = Object.create || function(obj) {
     return new O();
 };
 
+/**
+ * Makes an object that inherits `obj`. Similar to Object.create
+ *
+ * @param obj {Object} The object to inherit
+ * @param [mergeObj] {Object} An object that will be merged with the resulting child object
+ * @returns {Object} The resulting object
+ */
 function makeInherit(obj, mergeObj) {
     var inheritObj = _inherit(obj);
 
     return mergeObj ? mergeObjects(inheritObj, mergeObj) : inheritObj;
 }
 
+/**
+ * Makes an object that recursively inherits `obj`.
+ *
+ * @param obj {Object} The object to recursively inherit
+ * @param [mergeObj] {Object} An object that will be recursively merged with the resulting child object
+ * @returns {Object} The resulting object
+ */
 function makeRecursiveInherit(obj, mergeObj) {
     var inheritObj;
     if(isFn(obj)) {
@@ -23,9 +37,9 @@ function makeRecursiveInherit(obj, mergeObj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key)) {
             if( ( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key]) {
-                inheritObj[key] = makeRecursiveInherit(obj[key], mergeObj);
+                inheritObj[key] = makeRecursiveInherit(obj[key]);
             }
         }
     }
-    return mergeObj ? mergeObjects(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? mergeObjectsRecursively(inheritObj, mergeObj) : inheritObj;
 }

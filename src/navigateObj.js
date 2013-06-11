@@ -1,3 +1,14 @@
+/**
+ * Allows you to navigate an object with a given `road`.
+ * The given `fn` is invoked with fn(value, key, roadIndex, road) with the context (`this`) being the step in the road
+ * you're in.
+ * If `fn` returns false, the navigation stops
+ *
+ * @param {Object} obj The object to navigate
+ * @param {Array|String} road Either an array of property names or a String of dot separated property names
+ * @param {Function} fn A function that will be called for every property name
+ * @returns {*} `null` if navigation was interrupted, or the last step in the road
+ */
 function navigateObj(obj, road, fn) {
     if(typeof road === "string") {
         road = cleanArray(road.split("."));
@@ -12,6 +23,15 @@ function navigateObj(obj, road, fn) {
     return obj;
 }
 
+/**
+ * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`
+ *
+ * @param {Object} obj The object to navigate
+ * @param {Array|String} road Either an array of property names or a String of dot separated property names
+ * @param {*} endValue The value to set on the end of the road
+ * @param {boolean} setOwn If true, it makes sure that the navigation never travels in an inherited Object
+ * @returns {*} The `endValue`
+ */
 navigateObj.set = function(obj, road, endValue, setOwn) {
     navigateObj(obj, road, function(key, value, i, road) {
         if(i === road.length - 1) {
@@ -59,10 +79,26 @@ navigateObj.set = function(obj, road, endValue, setOwn) {
     return endValue;
 };
 
+/**
+ * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`,
+ * making sure it never travels in an inherited Object
+ *
+ * @param {Object} obj The object to navigate
+ * @param {Array|String} road Either an array of property names or a String of dot separated property names
+ * @param {*} endValue The value to set on the end of the road
+ * @returns {*} The `endValue`
+ */
 navigateObj.setOwn = function(obj, road, endValue) {
-    navigateObj.set(obj, road, endValue, true);
+    return navigateObj.set(obj, road, endValue, true);
 };
 
+/**
+ * Navigate `obj` on the `road` and returns the value at the end of the `road`
+ *
+ * @param {Object} obj The object to navigate
+ * @param {Array|String} road Either an array of property names or a String of dot separated property names
+ * @returns {*} The value at the end of the road
+ */
 navigateObj.get = function(obj, road) {
     var endValue;
 
