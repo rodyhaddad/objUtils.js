@@ -73,10 +73,10 @@ function toArray(obj) {
 }
 
 /**
- * Remove a specific element from an array.
+ * Clean an array from a specific element
  *
  * @param array An array to clean
- * @param from What should be removed from the array
+ * @param [from=""] What should be removed from the array, by default an empty String
  * @returns {Array} The cleaned array
  */
 function cleanArray(array, from) {
