@@ -1,8 +1,12 @@
-var _inherit = Object.create || function(obj) {
-    function O() {}
-    O.prototype = obj;
-    return new O();
-};
+var _inherit = Object.create || (function () {
+    function F() {
+    }
+
+    return function (o) {
+        F.prototype = o;
+        return new F()
+    }
+})();
 
 /**
  * Makes an object that inherits `obj`. Similar to Object.create
@@ -26,17 +30,17 @@ function makeInherit(obj, mergeObj) {
  */
 function makeRecursiveInherit(obj, mergeObj) {
     var inheritObj;
-    if(isFn(obj)) {
-        inheritObj = function() {
+    if (isFn(obj)) {
+        inheritObj = function () {
             return obj.apply(this, toArray(arguments));
         };
-    }else{
+    } else {
         inheritObj = makeInherit(obj);
     }
 
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key)) {
-            if( ( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key]) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key]) {
                 inheritObj[key] = makeRecursiveInherit(obj[key]);
             }
         }
