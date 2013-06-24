@@ -4,8 +4,8 @@ var _inherit = Object.create || (function () {
 
     return function (o) {
         F.prototype = o;
-        return new F()
-    }
+        return new F();
+    };
 })();
 
 /**
