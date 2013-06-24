@@ -53,7 +53,7 @@ function mergeObjectsSoftly(destination, source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeObjectsSoftly(destination[key] && source[key]);
+                    mergeObjectsSoftly(destination[key], source[key]);
                 } else if(isUndefined(destination[key])) {
                     destination[key] = source[key];
                 }
