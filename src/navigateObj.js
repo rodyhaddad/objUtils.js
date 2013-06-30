@@ -14,7 +14,7 @@ function navigateObj(obj, road, fn) {
         road = cleanArray(road.split("."));
     }
     for (var i = 0; i < road.length; i++) {
-        if (fn.call(obj, obj[road[i]], road[i], i, road) === false || isUndefined(obj)) {
+        if (isUndefined(obj) || fn.call(obj, obj[road[i]], road[i], i, road) === false) {
             return null;
         }
         obj = obj[road[i]];
@@ -22,6 +22,24 @@ function navigateObj(obj, road, fn) {
 
     return obj;
 }
+
+/**
+ * Allows you to check if all properties on a road are owned by a specific Object
+ *
+ * @param {Object} obj The object to navigate
+ * @param {Array|String} road Either an array of property names or a String of dot separated property names
+ * @returns {boolean} Whether all properties in the road are owned by `obj`
+ */
+navigateObj.hasOwn = function (obj, road) {
+    var hasOwn = true;
+    navigateObj(obj, road, function (value, key) {
+        hasOwn = this.hasOwnProperty(key);
+        if (!hasOwn) {
+            return false;
+        }
+    });
+    return hasOwn;
+};
 
 /**
  * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`
@@ -100,13 +118,13 @@ navigateObj.setOwn = function (obj, road, endValue) {
  * @returns {*} The value at the end of the road
  */
 navigateObj.get = function (obj, road) {
-    var endValue;
+    var endValue = null;
 
-    navigateObj(obj, road, function (value, key) {
-        endValue = value;
-        if (!isObject(value) && isFn(value)) {
-            return false;
+    navigateObj(obj, road, function (value, key, i, road) {
+        if(i === road.length - 1) {
+            endValue = value;
         }
     });
+
     return endValue && endValue.valueOf();
 };
