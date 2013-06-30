@@ -8,21 +8,23 @@
  * @returns {*} The obj passed in
  */
 function forEach(obj, iterator, context) {
-    var key;
-    if(obj) {
-        if(isFn(obj)) {
-            for(key in obj) {
-                if(obj.hasOwnProperty(key) && key != "prototype" && key != "length" && key != "name")
+    var key, len;
+    if (obj) {
+        if (isFn(obj)) {
+            for (key in obj) {
+                if (obj.hasOwnProperty(key) && key != "prototype" && key != "length" && key != "name") {
                     iterator.call(context, obj[key], key);
+                }
             }
         } else if (isArray(obj) || obj.hasOwnProperty("length")) {
-            for(key = 0; key < obj.length; key++)
+            for (key = 0, len = obj.length; key < len; key++) {
                 iterator.call(context, obj[key], key);
+            }
         } else if (obj.forEach && obj.forEach !== forEach) {
             obj.forEach(iterator, context);
         } else {
-            for(key in obj) {
-                if(obj.hasOwnProperty(key)) {
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) {
                     iterator.call(context, obj[key], key);
                 }
             }
