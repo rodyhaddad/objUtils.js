@@ -7,6 +7,7 @@ var objUtils = {
     isEmptyObject: isEmptyObject,
     toArray: toArray,
     cleanArray: cleanArray,
+    noop: noop,
 
     forEach: forEach,
 

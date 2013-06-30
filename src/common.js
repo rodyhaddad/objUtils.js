@@ -87,3 +87,10 @@ function cleanArray(array, from) {
     }
     return array;
 }
+
+/**
+ * A function that performs no operations
+ */
+function noop(){
+
+}
