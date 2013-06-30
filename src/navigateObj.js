@@ -33,10 +33,7 @@ function navigateObj(obj, road, fn) {
 navigateObj.hasOwn = function (obj, road) {
     var hasOwn = true;
     navigateObj(obj, road, function (value, key) {
-        hasOwn = this.hasOwnProperty(key);
-        if (!hasOwn) {
-            return false;
-        }
+        return hasOwn = this.hasOwnProperty(key);
     });
     return hasOwn;
 };
