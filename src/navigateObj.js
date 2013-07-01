@@ -33,7 +33,8 @@ function navigateObj(obj, road, fn) {
 navigateObj.hasOwn = function (obj, road) {
     var hasOwn = true;
     navigateObj(obj, road, function (value, key) {
-        return hasOwn = this.hasOwnProperty(key);
+        hasOwn = this.hasOwnProperty(key);
+        return hasOwn;
     });
     return hasOwn;
 };
@@ -58,7 +59,7 @@ var completeRoad = {
     }
     //string, boolean, number = null
 };
-completeRoad['string'] = completeRoad['boolean'] = completeRoad['number'] = completeRoad['null'];
+completeRoad.string = completeRoad.boolean = completeRoad.number = completeRoad['null'];
 navigateObj._completeRoad = completeRoad;
 
 /**
