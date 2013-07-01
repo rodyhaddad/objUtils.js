@@ -38,6 +38,29 @@ navigateObj.hasOwn = function (obj, road) {
     return hasOwn;
 };
 
+// handle the completion of the road for navigateObj.set
+var completeRoad = {
+    'undefined': function (value, key) {
+        this[key] = {};
+    },
+    'object': function (value, key, setOwn) {
+        if (setOwn && !this.hasOwnProperty(key)) {
+            this[key] = makeInherit(this[key]);
+        }
+    },
+    'function': noop,
+    'null': function (value, key) {
+        this[key] = {
+            valueOf: function () {
+                return value;
+            }
+        };
+    }
+    //string, boolean, number = null
+};
+completeRoad['string'] = completeRoad['boolean'] = completeRoad['number'] = completeRoad['null'];
+navigateObj._completeRoad = completeRoad;
+
 /**
  * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`
  *
@@ -64,31 +87,7 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
             }
         } else {
             var typeofValue = (value !== null ? typeof value : "null");
-
-            switch (typeofValue) {
-                case "undefined":
-                    this[key] = {};
-                    break;
-
-                case "number":
-                case "string":
-                case "boolean":
-                case "null":
-                    this[key] = {
-                        valueOf: function () {
-                            return value;
-                        }
-                    };
-                    break;
-
-                case "object":
-                    if (setOwn && !this.hasOwnProperty(key)) {
-                        this[key] = makeInherit(this[key]);
-                    }
-                    break;
-                default:
-                    break;
-            }
+            completeRoad[typeofValue].call(this, value, key, setOwn, value, i, road);
         }
     });
     return endValue;
@@ -118,7 +117,7 @@ navigateObj.get = function (obj, road) {
     var endValue = null;
 
     navigateObj(obj, road, function (value, key, i, road) {
-        if(i === road.length - 1) {
+        if (i === road.length - 1) {
             endValue = value;
         }
     });
