@@ -1,0 +1,49 @@
+<!doctype html public "Testing ObjUtils.js">
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>objUtils.js tests</title>
+		
+		 <link href="./jasmine/jasmine.css" media="screen" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		
+		
+		<script type="text/javascript" src="./jasmine/jasmine.js"></script>
+		<script type="text/javascript" src="./jasmine/jasmine-html.js"></script>
+		
+		<script type="text/javascript" src="../dist/objUtils.min.js"></script>
+
+        <script type="text/javascript" src="es5-shim.js"></script>
+
+		<script type="text/javascript" src="specs/common.js"></script>
+        <script type="text/javascript" src="specs/forEach.js"></script>
+        <script type="text/javascript" src="specs/mergeObj.js"></script>
+        <script type="text/javascript" src="specs/makeInherit.js"></script>
+        <script type="text/javascript" src="specs/navigateObj.js"></script>
+
+		<script type="text/javascript">
+    		;(function(){
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 250;
+                
+                var htmlReporter = new jasmine.HtmlReporter();
+                jasmineEnv.addReporter(htmlReporter);
+                
+                jasmineEnv.specFilter = function(spec) {
+                    return htmlReporter.specFilter(spec);
+                };
+                
+                var currentWindowOnload = window.onload;
+                    window.onload = function() {
+                    if (currentWindowOnload) {
+                        currentWindowOnload();
+                    }
+                    jasmineEnv.execute();
+                };
+                
+    		}());
+		</script>
+		
+	</body>
+</html>
