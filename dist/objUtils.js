@@ -1,4 +1,4 @@
-/*! objUtils.js v0.4.0 01-07-2013 
+/*! objUtils.js v0.5.0 02-07-2013 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
@@ -184,9 +184,10 @@ function makeInherit(obj, mergeObj) {
  *
  * @param obj {Object} The object to recursively inherit
  * @param [mergeObj] {Object} An object that will be recursively merged with the resulting child object
+ * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function makeRecursiveInherit(obj, mergeObj) {
+function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
     var inheritObj;
     if (isFn(obj)) {
         inheritObj = function () {
@@ -196,14 +197,41 @@ function makeRecursiveInherit(obj, mergeObj) {
         inheritObj = makeInherit(obj);
     }
 
+    if (fnEachLevel) {
+        _level = _level || 0;
+        fnEachLevel(inheritObj, obj, _level);
+    }
+
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
-            if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key]) {
-                inheritObj[key] = makeRecursiveInherit(obj[key]);
+            if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
+                inheritObj[key] = makeRecursiveInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
     }
     return mergeObj ? mergeObjectsRecursively(inheritObj, mergeObj) : inheritObj;
+}
+
+/**
+ * Makes an object that recursively inherits `obj`.
+ *
+ * @param obj {Object} The object to bound inherit
+ * @param [mergeObj] {Object} An object that will be recursively merged with the resulting child object
+ * @param {Function} fnEachLevel A function that gets called on each level of inherited object
+ * @returns {Object} The resulting object
+ */
+function makeBoundInherit(obj, mergeObj, fnEachLevel) {
+    return makeRecursiveInherit(obj, mergeObj, function (obj, superObj, level) {
+        if (!isArray(superObj.$$boundChildren)) {
+            superObj.$$boundChildren = [];
+        }
+        superObj.$$boundChildren.push(obj);
+
+        if (fnEachLevel) {
+            fnEachLevel(obj, superObj, level);
+        }
+
+    });
 }
 
 /**
@@ -363,6 +391,14 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
             var typeofValue = (value !== null ? typeof value : "null");
             completeRoad[typeofValue].call(this, value, key, setOwn, value, i, road);
         }
+
+        if (this.$$boundChildren && isObject(this[key])) {
+            forEach(this.$$boundChildren, function (child) {
+                if (!child.hasOwnProperty(key)){
+                    child[key] = makeBoundInherit(value);
+                }
+            });
+        }
     });
     return endValue;
 };
@@ -418,6 +454,7 @@ var objUtils = {
 
     makeInherit: makeInherit,
     makeRecursiveInherit: makeRecursiveInherit,
+    makeBoundInherit: makeBoundInherit,
 
     navigateObj: navigateObj
 };
