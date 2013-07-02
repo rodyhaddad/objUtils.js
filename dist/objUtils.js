@@ -1,4 +1,4 @@
-/*! objUtils.js v0.5.0 02-07-2013 
+/*! objUtils.js v0.5.1 02-07-2013 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
@@ -395,9 +395,9 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
         if (this.$$boundChildren && isObject(this[key])) {
             forEach(this.$$boundChildren, function (child) {
                 if (!child.hasOwnProperty(key)){
-                    child[key] = makeBoundInherit(value);
+                    child[key] = makeBoundInherit(this[key]);
                 }
-            });
+            }, this);
         }
     });
     return endValue;

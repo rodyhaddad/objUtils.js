@@ -94,9 +94,9 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
         if (this.$$boundChildren && isObject(this[key])) {
             forEach(this.$$boundChildren, function (child) {
                 if (!child.hasOwnProperty(key)){
-                    child[key] = makeBoundInherit(value);
+                    child[key] = makeBoundInherit(this[key]);
                 }
-            });
+            }, this);
         }
     });
     return endValue;
