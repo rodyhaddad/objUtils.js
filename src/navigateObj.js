@@ -90,6 +90,14 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
             var typeofValue = (value !== null ? typeof value : "null");
             completeRoad[typeofValue].call(this, value, key, setOwn, value, i, road);
         }
+
+        if (this.$$boundChildren && isObject(this[key])) {
+            forEach(this.$$boundChildren, function (child) {
+                if (!child.hasOwnProperty(key)){
+                    child[key] = makeBoundInherit(value);
+                }
+            });
+        }
     });
     return endValue;
 };

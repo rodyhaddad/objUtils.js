@@ -17,6 +17,7 @@ var objUtils = {
 
     makeInherit: makeInherit,
     makeRecursiveInherit: makeRecursiveInherit,
+    makeBoundInherit: makeBoundInherit,
 
     navigateObj: navigateObj
 };
