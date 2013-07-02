@@ -54,7 +54,7 @@ describe("The objUtils object has methods which help in object merging, which in
                 p4: true
             };
 
-            objC = Object.create(objA);
+            objC = objUtils.makeInherit(objA);
             objC.p5 = true;
             objC.p6 = true;
 

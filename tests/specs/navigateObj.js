@@ -5,7 +5,7 @@ describe("The objUtils object has methods which help in objects navigation:", fu
             a: {b: {c: {d: {e: true}}}}
         };
         var road = "a.b.c.d.e";
-        [road, road.split(".")].forEach(function (road) {
+        objUtils.forEach([road, road.split(".")], function (road) {
             var type = objUtils.isArray(road) ? "array" : "string";
             it("which allows you to navigate an object using a road (" + type + ")", function () {
                 var expectedRoad = ["a", "b", "c", "d", "e"];
@@ -26,7 +26,7 @@ describe("The objUtils object has methods which help in objects navigation:", fu
                 a: {b: {c: {d: true}}}
             },
             objB = {
-                a: Object.create({b: {c: true}})
+                a: objUtils.makeInherit({b: {c: true}})
             },
             objC = objUtils.makeRecursiveInherit(objA);
 
