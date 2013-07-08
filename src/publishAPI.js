@@ -1,4 +1,4 @@
-var objUtils = {
+var ot = {
     globalObj: globalObj,
     isArray: isArray,
     isObject: isObject,

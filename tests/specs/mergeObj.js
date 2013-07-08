@@ -1,4 +1,4 @@
-describe("The objUtils object has methods which help in object merging, which include: ", function () {
+describe("The ot object has methods which help in object merging, which include: ", function () {
 
     describe("a mergeObjects method", function () {
 
@@ -26,7 +26,7 @@ describe("The objUtils object has methods which help in object merging, which in
                 },
                 p6: true
             };
-            objUtils.mergeObjects(objA, objB);
+            ot.mergeObjects(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,
@@ -54,11 +54,11 @@ describe("The objUtils object has methods which help in object merging, which in
                 p4: true
             };
 
-            objC = objUtils.makeInherit(objA);
+            objC = ot.makeInherit(objA);
             objC.p5 = true;
             objC.p6 = true;
 
-            objB = objUtils.mergeObjects(objB, objC);
+            objB = ot.mergeObjects(objB, objC);
 
             expect(objC.p1).toBe(true);
             expect(objC.p2).toBe(true);
@@ -96,7 +96,7 @@ describe("The objUtils object has methods which help in object merging, which in
                     p3_3: true
                 }
             };
-            objUtils.mergeObjectsRecursively(objA, objB);
+            ot.mergeObjectsRecursively(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,
@@ -138,7 +138,7 @@ describe("The objUtils object has methods which help in object merging, which in
                     p4_1: true
                 }
             };
-            objUtils.mergeObjectsSoftly(objA, objB);
+            ot.mergeObjectsSoftly(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,

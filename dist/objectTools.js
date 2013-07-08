@@ -1,4 +1,4 @@
-/*! objUtils.js v0.5.1 02-07-2013 
+/*! objectTools.js v0.6.0 08-07-2013 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-var objUtils = (function () {
+var ot = (function () {
 
 /**
  * The global object. `window` in the browser, `global` in node.js or `this` otherwise
@@ -435,7 +435,7 @@ navigateObj.get = function (obj, road) {
     return endValue && endValue.valueOf();
 };
 
-var objUtils = {
+var ot = {
     globalObj: globalObj,
     isArray: isArray,
     isObject: isObject,
@@ -460,14 +460,14 @@ var objUtils = {
 };
 
 if (typeof module === "object" && module && isObject(module.exports)) {
-    module.exports = objUtils;
+    module.exports = ot;
 } else {
     if (typeof define === "function" && define.amd) {
-        define("objUtils", [], function(){
-            return objUtils;
+        define("ot", [], function(){
+            return ot;
         });
     }
 }
 
-    return objUtils;
+    return ot;
 }());

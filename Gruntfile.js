@@ -2,7 +2,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        destName: 'objUtils',
+        destName: 'objectTools',
         LICENSE: grunt.file.read("LICENSE"),
         concat: {
             options: {
@@ -10,7 +10,7 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> v<%= pkg.version %> <%= grunt.template.today("dd-mm-yyyy") %> \n<%= LICENSE %>\n*/\n\n'
             },
             dist: {
-                src: ["src/objUtils.prefix", "src/{common,forEach,mergeObj,makeInherit,navigateObj,publishAPI}.js", "src/exportAPI.js", "src/objUtils.suffix"],
+                src: ["src/objectTools.prefix", "src/{common,forEach,mergeObj,makeInherit,navigateObj,publishAPI}.js", "src/exportAPI.js", "src/objectTools.suffix"],
                 dest: 'dist/<%= destName %>.js'
             }
         },

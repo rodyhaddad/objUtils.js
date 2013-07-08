@@ -1,11 +1,11 @@
 {
-  "name": "objUtils.js",
-  "version": "0.5.1",
+  "name": "objectTools.js",
+  "version": "0.6.0",
   "description": "JavaScript Object Utilities",
-  "main": "dist/objUtils.js",
+  "main": "dist/objectTools.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rodyhaddad/objUtils.js.git"
+    "url": "https://github.com/rodyhaddad/objectTools.js.git"
   },
   "keywords": [
     "object",

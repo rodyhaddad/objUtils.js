@@ -1,10 +1,10 @@
-describe("The objUtils object has method which help in inheritance", function () {
+describe("The ot object has method which help in inheritance", function () {
     describe("a makeInherit method", function () {
         var objA, objB;
         objA = {
             p1: true
         };
-        objB = objUtils.makeInherit(objA, {
+        objB = ot.makeInherit(objA, {
             p2: true
         });
 
@@ -30,7 +30,7 @@ describe("The objUtils object has method which help in inheritance", function ()
                 }
             }
         };
-        objB = objUtils.makeRecursiveInherit(objA, {
+        objB = ot.makeRecursiveInherit(objA, {
             p2: {
                 p2_3: true,
                 p2_2: {
@@ -97,17 +97,17 @@ describe("The objUtils object has method which help in inheritance", function ()
                 }
             }
         };
-        objB = objUtils.makeBoundInherit(objA);
+        objB = ot.makeBoundInherit(objA);
 
-        objUtils.navigateObj.set(objA, "p2.p2_2.p2_2_2", true);
-        objUtils.navigateObj.set(objA, "p2.p2_2.p2_2_3", {});
-        objUtils.navigateObj.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
+        ot.navigateObj.set(objA, "p2.p2_2.p2_2_2", true);
+        ot.navigateObj.set(objA, "p2.p2_2.p2_2_3", {});
+        ot.navigateObj.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
 
         it("which updates", function () {
-            expect(objUtils.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
+            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
 
-            expect(objUtils.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(true);
-            expect(objUtils.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(true);
+            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(true);
+            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(true);
         });
     });
 });

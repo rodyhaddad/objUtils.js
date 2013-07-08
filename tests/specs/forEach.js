@@ -1,11 +1,11 @@
-describe("The objUtils object has a forEach method, which allows you: ", function () {
+describe("The ot object has a forEach method, which allows you: ", function () {
 
     it("To iterate over an array", function () {
         var array = [1, 2, 4, 8, 16];
         var sum = 0;
         var sumIndex = 0;
 
-        objUtils.forEach(array, function (value, index) {
+        ot.forEach(array, function (value, index) {
             sum += value;
             sumIndex += index;
             expect(this.context).toBe(true);
@@ -22,7 +22,7 @@ describe("The objUtils object has a forEach method, which allows you: ", functio
             prop3: false
         };
 
-        objUtils.forEach(obj, function (value, key) {
+        ot.forEach(obj, function (value, key) {
             obj[key] = !value;
             expect(this.context).toBe(true);
         }, {context: true});
@@ -40,7 +40,7 @@ describe("The objUtils object has a forEach method, which allows you: ", functio
         fnWithProps.prop3 = false;
         var forbiddenProps = ["prototype", "name", "length"];
 
-        objUtils.forEach(fnWithProps, function (value, key) {
+        ot.forEach(fnWithProps, function (value, key) {
             expect(forbiddenProps).not.toContain(key);
             fnWithProps[key] = !value;
             expect(this.context).toBe(true);
@@ -58,7 +58,7 @@ describe("The objUtils object has a forEach method, which allows you: ", functio
             }
         };
 
-        objUtils.forEach(objectWithForEach, function(calledFromForEach) {
+        ot.forEach(objectWithForEach, function(calledFromForEach) {
             expect(calledFromForEach).toBe(true);
             expect(this.context).toBe(true);
         }, {context: true});

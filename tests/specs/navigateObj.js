@@ -1,16 +1,16 @@
-describe("The objUtils object has methods which help in objects navigation:", function () {
+describe("The ot object has methods which help in objects navigation:", function () {
 
     describe("a navigateObj method", function () {
         var obj = {
             a: {b: {c: {d: {e: true}}}}
         };
         var road = "a.b.c.d.e";
-        objUtils.forEach([road, road.split(".")], function (road) {
-            var type = objUtils.isArray(road) ? "array" : "string";
+        ot.forEach([road, road.split(".")], function (road) {
+            var type = ot.isArray(road) ? "array" : "string";
             it("which allows you to navigate an object using a road (" + type + ")", function () {
                 var expectedRoad = ["a", "b", "c", "d", "e"];
 
-                objUtils.navigateObj(obj, road, function (val, key, index, road) {
+                ot.navigateObj(obj, road, function (val, key, index, road) {
                     expect(road).toEqual(["a", "b", "c", "d", "e"]);
                     expect(expectedRoad[index]).toBe(key);
                     if (index === road.length - 1) {
@@ -26,14 +26,14 @@ describe("The objUtils object has methods which help in objects navigation:", fu
                 a: {b: {c: {d: true}}}
             },
             objB = {
-                a: objUtils.makeInherit({b: {c: true}})
+                a: ot.makeInherit({b: {c: true}})
             },
-            objC = objUtils.makeRecursiveInherit(objA);
+            objC = ot.makeRecursiveInherit(objA);
 
         it("which allows you to check that the properties on a road are all owned by an object", function () {
-            expect(objUtils.navigateObj.hasOwn(objA, "a.b.c.d")).toBe(true);
-            expect(objUtils.navigateObj.hasOwn(objB, "a.b.c")).toBe(false);
-            expect(objUtils.navigateObj.hasOwn(objC, "a.b.c.d")).toBe(false);
+            expect(ot.navigateObj.hasOwn(objA, "a.b.c.d")).toBe(true);
+            expect(ot.navigateObj.hasOwn(objB, "a.b.c")).toBe(false);
+            expect(ot.navigateObj.hasOwn(objC, "a.b.c.d")).toBe(false);
         });
     });
 
@@ -41,17 +41,17 @@ describe("The objUtils object has methods which help in objects navigation:", fu
         var obj = {};
 
         //primitive values
-        objUtils.navigateObj.set(obj, "a.b.c", true);
-        objUtils.navigateObj.set(obj, "z.y.x", true);
-        objUtils.navigateObj.set(obj, "a.b", true);
-        objUtils.navigateObj.set(obj, "a.b.c.e", true);
+        ot.navigateObj.set(obj, "a.b.c", true);
+        ot.navigateObj.set(obj, "z.y.x", true);
+        ot.navigateObj.set(obj, "a.b", true);
+        ot.navigateObj.set(obj, "a.b.c.e", true);
 
         //objects
-        objUtils.navigateObj.set(obj, "o.o.o", {1: true});
-        objUtils.navigateObj.set(obj, "o.o.o", {2: true});
-        objUtils.navigateObj.set(obj, "o.o.o", true);
-        objUtils.navigateObj.set(obj, "o.o", {3: true});
-        objUtils.navigateObj.set(obj, "o.o.o.o", {4: true});
+        ot.navigateObj.set(obj, "o.o.o", {1: true});
+        ot.navigateObj.set(obj, "o.o.o", {2: true});
+        ot.navigateObj.set(obj, "o.o.o", true);
+        ot.navigateObj.set(obj, "o.o", {3: true});
+        ot.navigateObj.set(obj, "o.o.o.o", {4: true});
 
         it("which allows you to set a value on the end of a road", function () {
             expect(obj.a.b.c.valueOf()).toBe(true);
@@ -80,8 +80,8 @@ describe("The objUtils object has methods which help in objects navigation:", fu
                     }
                 }
             },
-            objB = objUtils.makeRecursiveInherit(objA, {
-                z: objUtils.makeInherit({
+            objB = ot.makeRecursiveInherit(objA, {
+                z: ot.makeInherit({
                     y: {
                         x: false
                     }
@@ -89,13 +89,13 @@ describe("The objUtils object has methods which help in objects navigation:", fu
             });
 
         it("which can set properties while making sure to not go inherited objects", function () {
-            objUtils.navigateObj.setOwn(objB, "a.b.d", true);
+            ot.navigateObj.setOwn(objB, "a.b.d", true);
             expect(objB.a.b.hasOwnProperty("c")).toBe(false);
             expect(objB.a.b.hasOwnProperty("d")).toBe(true);
 
-            expect(objUtils.navigateObj.hasOwn(objB, "z.y.x")).toBe(false);
-            objUtils.navigateObj.setOwn(objB, "z.y.w", true);
-            expect(objUtils.navigateObj.hasOwn(objB, "z.y.w")).toBe(true);
+            expect(ot.navigateObj.hasOwn(objB, "z.y.x")).toBe(false);
+            ot.navigateObj.setOwn(objB, "z.y.w", true);
+            expect(ot.navigateObj.hasOwn(objB, "z.y.w")).toBe(true);
         });
     });
 
@@ -109,11 +109,11 @@ describe("The objUtils object has methods which help in objects navigation:", fu
         };
 
         it("which returns the value at the end of a road", function () {
-            expect(objUtils.navigateObj.get(obj, "a.b.c")).toBe(true);
+            expect(ot.navigateObj.get(obj, "a.b.c")).toBe(true);
         });
 
         it("or null if some part of the road doesn't exist", function () {
-            expect(objUtils.navigateObj.get(obj, "a.q.d")).toBe(null);
+            expect(ot.navigateObj.get(obj, "a.q.d")).toBe(null);
         })
     });
 

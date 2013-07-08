@@ -1,9 +1,9 @@
 if (typeof module === "object" && module && isObject(module.exports)) {
-    module.exports = objUtils;
+    module.exports = ot;
 } else {
     if (typeof define === "function" && define.amd) {
-        define("objUtils", [], function(){
-            return objUtils;
+        define("ot", [], function(){
+            return ot;
         });
     }
 }

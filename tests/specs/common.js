@@ -1,4 +1,4 @@
-describe("The objUtils object has common methods, which include: ", function () {
+describe("The ot object has common methods, which include: ", function () {
 
     function allTrue(method, values) {
         for (var i = 0; i < values.length; i++) {
@@ -14,9 +14,9 @@ describe("The objUtils object has common methods, which include: ", function () 
 
     describe("an isArray method", function () {
         it("which only returns true when passed an array", function () {
-            expect(objUtils.isArray([])).toBe(true);
+            expect(ot.isArray([])).toBe(true);
 
-            allFalse(objUtils.isArray, [
+            allFalse(ot.isArray, [
                 {},
                 5,
                 "t",
@@ -33,13 +33,13 @@ describe("The objUtils object has common methods, which include: ", function () 
 
     describe("an isObject method", function () {
         it("which only returns true when passed an Object (excluding null)", function () {
-            allTrue(objUtils.isObject, [
+            allTrue(ot.isObject, [
                 {},
                 [],
                 /test/
             ]);
 
-            allFalse(objUtils.isObject, [
+            allFalse(ot.isObject, [
                 5, "t", "", null, undefined, true,
                 function () {
 
@@ -50,11 +50,11 @@ describe("The objUtils object has common methods, which include: ", function () 
 
     describe("an isFn method", function () {
         it("which only returns true when passed a function", function () {
-            expect(objUtils.isFn(function () {
+            expect(ot.isFn(function () {
 
             })).toBe(true);
 
-            allFalse(objUtils.isFn, [
+            allFalse(ot.isFn, [
                 [],
                 {},
                 5,
@@ -69,9 +69,9 @@ describe("The objUtils object has common methods, which include: ", function () 
 
     describe("an isUndefined method", function () {
         it("which only returns true when passed an undefined value", function () {
-            expect(objUtils.isUndefined(undefined)).toBe(true);
+            expect(ot.isUndefined(undefined)).toBe(true);
 
-            allFalse(objUtils.isUndefined, [
+            allFalse(ot.isUndefined, [
                 [],
                 {},
                 5,
@@ -88,29 +88,29 @@ describe("The objUtils object has common methods, which include: ", function () 
 
     describe("an isEmptyObject method", function () {
         it("which only returns true when passed an empty object", function () {
-            expect(objUtils.isEmptyObject({})).toBe(true);
+            expect(ot.isEmptyObject({})).toBe(true);
 
-            expect(objUtils.isEmptyObject({notEmpty: true})).toBe(false);
+            expect(ot.isEmptyObject({notEmpty: true})).toBe(false);
         })
     });
 
     describe("a toArray method", function () {
         it("which transforms the argument passed to it into an array", function () {
-            expect(objUtils.toArray([])).toEqual([]);
+            expect(ot.toArray([])).toEqual([]);
 
-            expect(objUtils.toArray({length: 2})).toEqual(new Array(2));
+            expect(ot.toArray({length: 2})).toEqual(new Array(2));
 
-            expect(objUtils.toArray({length: 2, "0": true, "1": false})).toEqual([true, false]);
+            expect(ot.toArray({length: 2, "0": true, "1": false})).toEqual([true, false]);
         })
     });
 
     describe("a cleanArray method", function () {
         it("which cleans an array from a specific element", function () {
-            expect(objUtils.cleanArray(new Array(10), undefined)).toEqual([]);
+            expect(ot.cleanArray(new Array(10), undefined)).toEqual([]);
 
-            expect(objUtils.cleanArray([1, 2, 3, 1, 2, 3], 1)).toEqual([2, 3, 2, 3]);
+            expect(ot.cleanArray([1, 2, 3, 1, 2, 3], 1)).toEqual([2, 3, 2, 3]);
 
-            expect(objUtils.cleanArray(".test.ing.".split("."), "")).toEqual(["test", "ing"]);
+            expect(ot.cleanArray(".test.ing.".split("."), "")).toEqual(["test", "ing"]);
         })
     });
 
