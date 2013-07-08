@@ -9,7 +9,7 @@
  * @param {Function} fn A function that will be called for every property name with the args (value, key, index, roadArray) and its this scope being the current step in the road
  * @returns {*} `null` if navigation was interrupted, or the last step in the road
  */
-function navigateObj(obj, road, fn) {
+function navigate(obj, road, fn) {
     if (typeof road === "string") {
         road = cleanArray(road.split("."));
     }
@@ -30,23 +30,23 @@ function navigateObj(obj, road, fn) {
  * @param {Array|String} road Either an array of property names or a String of dot separated property names
  * @returns {boolean} Whether all properties in the road are owned by `obj`
  */
-navigateObj.hasOwn = function (obj, road) {
+navigate.hasOwn = function (obj, road) {
     var hasOwn = true;
-    navigateObj(obj, road, function (value, key) {
+    navigate(obj, road, function (value, key) {
         hasOwn = this.hasOwnProperty(key);
         return hasOwn;
     });
     return hasOwn;
 };
 
-// handle the completion of the road for navigateObj.set
+// handle the completion of the road for navigate.set
 var completeRoad = {
     'undefined': function (value, key) {
         this[key] = {};
     },
     'object': function (value, key, setOwn) {
         if (setOwn && !this.hasOwnProperty(key)) {
-            this[key] = makeInherit(this[key]);
+            this[key] = inherit(this[key]);
         }
     },
     'function': noop,
@@ -60,7 +60,7 @@ var completeRoad = {
     //string, boolean, number = null
 };
 completeRoad.string = completeRoad.boolean = completeRoad.number = completeRoad['null'];
-navigateObj._completeRoad = completeRoad;
+navigate._completeRoad = completeRoad;
 
 /**
  * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`
@@ -71,13 +71,13 @@ navigateObj._completeRoad = completeRoad;
  * @param {boolean} setOwn If true, it makes sure that the navigation never travels in an inherited Object
  * @returns {*} The `endValue`
  */
-navigateObj.set = function (obj, road, endValue, setOwn) {
-    navigateObj(obj, road, function (value, key, i, road) {
+navigate.set = function (obj, road, endValue, setOwn) {
+    navigate(obj, road, function (value, key, i, road) {
         if (i === road.length - 1) {
             if (isObject(value)) {
                 if (isObject(endValue) || isFn(endValue)) {
                     this[key] = endValue;
-                    mergeObjects(this[key], value);
+                    merge(this[key], value);
                 } else {
                     this[key].valueOf = function () {
                         return endValue;
@@ -94,7 +94,7 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
         if (this.$$boundChildren && isObject(this[key])) {
             forEach(this.$$boundChildren, function (child) {
                 if (!child.hasOwnProperty(key)){
-                    child[key] = makeBoundInherit(this[key]);
+                    child[key] = boundInherit(this[key]);
                 }
             }, this);
         }
@@ -111,8 +111,8 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
  * @param {*} endValue The value to set on the end of the road
  * @returns {*} The `endValue`
  */
-navigateObj.setOwn = function (obj, road, endValue) {
-    return navigateObj.set(obj, road, endValue, true);
+navigate.setOwn = function (obj, road, endValue) {
+    return navigate.set(obj, road, endValue, true);
 };
 
 /**
@@ -122,10 +122,10 @@ navigateObj.setOwn = function (obj, road, endValue) {
  * @param {Array|String} road Either an array of property names or a String of dot separated property names
  * @returns {*} The value at the end of the road
  */
-navigateObj.get = function (obj, road) {
+navigate.get = function (obj, road) {
     var endValue = null;
 
-    navigateObj(obj, road, function (value, key, i, road) {
+    navigate(obj, road, function (value, key, i, road) {
         if (i === road.length - 1) {
             endValue = value;
         }

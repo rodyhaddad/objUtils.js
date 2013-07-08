@@ -1,10 +1,10 @@
 describe("The ot object has method which help in inheritance", function () {
-    describe("a makeInherit method", function () {
+    describe("a inherit method", function () {
         var objA, objB;
         objA = {
             p1: true
         };
-        objB = ot.makeInherit(objA, {
+        objB = ot.inherit(objA, {
             p2: true
         });
 
@@ -19,7 +19,7 @@ describe("The ot object has method which help in inheritance", function () {
         });
     });
 
-    describe("a makeRecursiveInherit method", function () {
+    describe("a deepInherit method", function () {
         var objA, objB;
         objA = {
             p1: true,
@@ -30,7 +30,7 @@ describe("The ot object has method which help in inheritance", function () {
                 }
             }
         };
-        objB = ot.makeRecursiveInherit(objA, {
+        objB = ot.recursiveInherit(objA, {
             p2: {
                 p2_3: true,
                 p2_2: {
@@ -86,7 +86,7 @@ describe("The ot object has method which help in inheritance", function () {
 
 
 
-    describe("a makeBoundInherit method", function () {
+    describe("a boundInherit method", function () {
         var objA, objB;
         objA = {
             p1: true,
@@ -97,17 +97,17 @@ describe("The ot object has method which help in inheritance", function () {
                 }
             }
         };
-        objB = ot.makeBoundInherit(objA);
+        objB = ot.boundInherit(objA);
 
-        ot.navigateObj.set(objA, "p2.p2_2.p2_2_2", true);
-        ot.navigateObj.set(objA, "p2.p2_2.p2_2_3", {});
-        ot.navigateObj.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
+        ot.navigate.set(objA, "p2.p2_2.p2_2_2", true);
+        ot.navigate.set(objA, "p2.p2_2.p2_2_3", {});
+        ot.navigate.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
 
         it("which updates", function () {
-            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
 
-            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(true);
-            expect(ot.navigateObj.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(true);
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(true);
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(true);
         });
     });
 });

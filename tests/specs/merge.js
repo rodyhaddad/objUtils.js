@@ -1,6 +1,6 @@
 describe("The ot object has methods which help in object merging, which include: ", function () {
 
-    describe("a mergeObjects method", function () {
+    describe("a merge method", function () {
 
         it("which merges two objects together", function () {
             var objA, objB;
@@ -26,7 +26,7 @@ describe("The ot object has methods which help in object merging, which include:
                 },
                 p6: true
             };
-            ot.mergeObjects(objA, objB);
+            ot.merge(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,
@@ -54,11 +54,11 @@ describe("The ot object has methods which help in object merging, which include:
                 p4: true
             };
 
-            objC = ot.makeInherit(objA);
+            objC = ot.inherit(objA);
             objC.p5 = true;
             objC.p6 = true;
 
-            objB = ot.mergeObjects(objB, objC);
+            objB = ot.merge(objB, objC);
 
             expect(objC.p1).toBe(true);
             expect(objC.p2).toBe(true);
@@ -72,7 +72,7 @@ describe("The ot object has methods which help in object merging, which include:
 
     });
 
-    describe("a mergeObjectsRecursively method", function() {
+    describe("a deepMerge method", function() {
         it("which merges two objects deeply", function() {
             var objA, objB;
             objA = {
@@ -96,7 +96,7 @@ describe("The ot object has methods which help in object merging, which include:
                     p3_3: true
                 }
             };
-            ot.mergeObjectsRecursively(objA, objB);
+            ot.mergeRecursively(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,
@@ -115,7 +115,7 @@ describe("The ot object has methods which help in object merging, which include:
         });
     });
 
-    describe("a mergeObjectsSoftly method", function() {
+    describe("a softMerge method", function() {
         it("which merges two objects softly", function() {
             var objA, objB;
             objA = {
@@ -138,7 +138,7 @@ describe("The ot object has methods which help in object merging, which include:
                     p4_1: true
                 }
             };
-            ot.mergeObjectsSoftly(objA, objB);
+            ot.mergeSoftly(objA, objB);
 
             expect(objA).toEqual({
                 p1: true,

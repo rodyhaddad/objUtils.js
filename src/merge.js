@@ -6,7 +6,7 @@
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjects(destination, source) {
+function merge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
@@ -25,12 +25,12 @@ function mergeObjects(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjectsRecursively(destination, source) {
+function deepMerge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeObjectsRecursively(destination[key], source[key]);
+                    deepMerge(destination[key], source[key]);
                 } else {
                     destination[key] = source[key];
                 }
@@ -48,12 +48,12 @@ function mergeObjectsRecursively(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjectsSoftly(destination, source) {
+function softMerge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeObjectsSoftly(destination[key], source[key]);
+                    softMerge(destination[key], source[key]);
                 } else if(isUndefined(destination[key])) {
                     destination[key] = source[key];
                 }

@@ -15,10 +15,10 @@ var _inherit = Object.create || (function () {
  * @param [mergeObj] {Object} An object that will be merged with the resulting child object
  * @returns {Object} The resulting object
  */
-function makeInherit(obj, mergeObj) {
+function inherit(obj, mergeObj) {
     var inheritObj = _inherit(obj);
 
-    return mergeObj ? mergeObjects(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? merge(inheritObj, mergeObj) : inheritObj;
 }
 
 /**
@@ -29,14 +29,14 @@ function makeInherit(obj, mergeObj) {
  * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
+function deepInherit(obj, mergeObj, fnEachLevel, _level) {
     var inheritObj;
     if (isFn(obj)) {
         inheritObj = function () {
             return obj.apply(this, toArray(arguments));
         };
     } else {
-        inheritObj = makeInherit(obj);
+        inheritObj = inherit(obj);
     }
 
     if (fnEachLevel) {
@@ -47,11 +47,11 @@ function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
-                inheritObj[key] = makeRecursiveInherit(obj[key], null, fnEachLevel, _level + 1);
+                inheritObj[key] = deepInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
     }
-    return mergeObj ? mergeObjectsRecursively(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? deepMerge(inheritObj, mergeObj) : inheritObj;
 }
 
 /**
@@ -62,8 +62,8 @@ function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
  * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function makeBoundInherit(obj, mergeObj, fnEachLevel) {
-    return makeRecursiveInherit(obj, mergeObj, function (obj, superObj, level) {
+function boundInherit(obj, mergeObj, fnEachLevel) {
+    return deepInherit(obj, mergeObj, function (obj, superObj, level) {
         if (!isArray(superObj.$$boundChildren)) {
             superObj.$$boundChildren = [];
         }

@@ -173,10 +173,10 @@ var _inherit = Object.create || (function () {
  * @param [mergeObj] {Object} An object that will be merged with the resulting child object
  * @returns {Object} The resulting object
  */
-function makeInherit(obj, mergeObj) {
+function inherit(obj, mergeObj) {
     var inheritObj = _inherit(obj);
 
-    return mergeObj ? mergeObjects(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? merge(inheritObj, mergeObj) : inheritObj;
 }
 
 /**
@@ -187,14 +187,14 @@ function makeInherit(obj, mergeObj) {
  * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
+function recursiveInherit(obj, mergeObj, fnEachLevel, _level) {
     var inheritObj;
     if (isFn(obj)) {
         inheritObj = function () {
             return obj.apply(this, toArray(arguments));
         };
     } else {
-        inheritObj = makeInherit(obj);
+        inheritObj = inherit(obj);
     }
 
     if (fnEachLevel) {
@@ -205,11 +205,11 @@ function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
-                inheritObj[key] = makeRecursiveInherit(obj[key], null, fnEachLevel, _level + 1);
+                inheritObj[key] = recursiveInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
     }
-    return mergeObj ? mergeObjectsRecursively(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? mergeRecursively(inheritObj, mergeObj) : inheritObj;
 }
 
 /**
@@ -220,8 +220,8 @@ function makeRecursiveInherit(obj, mergeObj, fnEachLevel, _level) {
  * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function makeBoundInherit(obj, mergeObj, fnEachLevel) {
-    return makeRecursiveInherit(obj, mergeObj, function (obj, superObj, level) {
+function boundInherit(obj, mergeObj, fnEachLevel) {
+    return recursiveInherit(obj, mergeObj, function (obj, superObj, level) {
         if (!isArray(superObj.$$boundChildren)) {
             superObj.$$boundChildren = [];
         }
@@ -242,7 +242,7 @@ function makeBoundInherit(obj, mergeObj, fnEachLevel) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjects(destination, source) {
+function merge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
@@ -261,12 +261,12 @@ function mergeObjects(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjectsRecursively(destination, source) {
+function mergeRecursively(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeObjectsRecursively(destination[key], source[key]);
+                    mergeRecursively(destination[key], source[key]);
                 } else {
                     destination[key] = source[key];
                 }
@@ -284,12 +284,12 @@ function mergeObjectsRecursively(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeObjectsSoftly(destination, source) {
+function mergeSoftly(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeObjectsSoftly(destination[key], source[key]);
+                    mergeSoftly(destination[key], source[key]);
                 } else if(isUndefined(destination[key])) {
                     destination[key] = source[key];
                 }
@@ -310,7 +310,7 @@ function mergeObjectsSoftly(destination, source) {
  * @param {Function} fn A function that will be called for every property name with the args (value, key, index, roadArray) and its this scope being the current step in the road
  * @returns {*} `null` if navigation was interrupted, or the last step in the road
  */
-function navigateObj(obj, road, fn) {
+function navigate(obj, road, fn) {
     if (typeof road === "string") {
         road = cleanArray(road.split("."));
     }
@@ -331,23 +331,23 @@ function navigateObj(obj, road, fn) {
  * @param {Array|String} road Either an array of property names or a String of dot separated property names
  * @returns {boolean} Whether all properties in the road are owned by `obj`
  */
-navigateObj.hasOwn = function (obj, road) {
+navigate.hasOwn = function (obj, road) {
     var hasOwn = true;
-    navigateObj(obj, road, function (value, key) {
+    navigate(obj, road, function (value, key) {
         hasOwn = this.hasOwnProperty(key);
         return hasOwn;
     });
     return hasOwn;
 };
 
-// handle the completion of the road for navigateObj.set
+// handle the completion of the road for navigate.set
 var completeRoad = {
     'undefined': function (value, key) {
         this[key] = {};
     },
     'object': function (value, key, setOwn) {
         if (setOwn && !this.hasOwnProperty(key)) {
-            this[key] = makeInherit(this[key]);
+            this[key] = inherit(this[key]);
         }
     },
     'function': noop,
@@ -361,7 +361,7 @@ var completeRoad = {
     //string, boolean, number = null
 };
 completeRoad.string = completeRoad.boolean = completeRoad.number = completeRoad['null'];
-navigateObj._completeRoad = completeRoad;
+navigate._completeRoad = completeRoad;
 
 /**
  * Navigate `obj` on the `road` and sets `endValue` on the end of the `road`
@@ -372,13 +372,13 @@ navigateObj._completeRoad = completeRoad;
  * @param {boolean} setOwn If true, it makes sure that the navigation never travels in an inherited Object
  * @returns {*} The `endValue`
  */
-navigateObj.set = function (obj, road, endValue, setOwn) {
-    navigateObj(obj, road, function (value, key, i, road) {
+navigate.set = function (obj, road, endValue, setOwn) {
+    navigate(obj, road, function (value, key, i, road) {
         if (i === road.length - 1) {
             if (isObject(value)) {
                 if (isObject(endValue) || isFn(endValue)) {
                     this[key] = endValue;
-                    mergeObjects(this[key], value);
+                    merge(this[key], value);
                 } else {
                     this[key].valueOf = function () {
                         return endValue;
@@ -395,7 +395,7 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
         if (this.$$boundChildren && isObject(this[key])) {
             forEach(this.$$boundChildren, function (child) {
                 if (!child.hasOwnProperty(key)){
-                    child[key] = makeBoundInherit(this[key]);
+                    child[key] = boundInherit(this[key]);
                 }
             }, this);
         }
@@ -412,8 +412,8 @@ navigateObj.set = function (obj, road, endValue, setOwn) {
  * @param {*} endValue The value to set on the end of the road
  * @returns {*} The `endValue`
  */
-navigateObj.setOwn = function (obj, road, endValue) {
-    return navigateObj.set(obj, road, endValue, true);
+navigate.setOwn = function (obj, road, endValue) {
+    return navigate.set(obj, road, endValue, true);
 };
 
 /**
@@ -423,10 +423,10 @@ navigateObj.setOwn = function (obj, road, endValue) {
  * @param {Array|String} road Either an array of property names or a String of dot separated property names
  * @returns {*} The value at the end of the road
  */
-navigateObj.get = function (obj, road) {
+navigate.get = function (obj, road) {
     var endValue = null;
 
-    navigateObj(obj, road, function (value, key, i, road) {
+    navigate(obj, road, function (value, key, i, road) {
         if (i === road.length - 1) {
             endValue = value;
         }
@@ -448,15 +448,15 @@ var ot = {
 
     forEach: forEach,
 
-    mergeObjects: mergeObjects,
-    mergeObjectsRecursively: mergeObjectsRecursively,
-    mergeObjectsSoftly: mergeObjectsSoftly,
+    merge: merge,
+    mergeRecursively: mergeRecursively, deepMerge: mergeRecursively, recursiveMerge: mergeRecursively,
+    mergeSoftly: mergeSoftly, softMerge: mergeSoftly,
 
-    makeInherit: makeInherit,
-    makeRecursiveInherit: makeRecursiveInherit,
-    makeBoundInherit: makeBoundInherit,
+    inherit: inherit,
+    recursiveInherit: recursiveInherit, deepInherit: recursiveInherit, inheritRecursively: recursiveInherit,
+    boundInherit: boundInherit,
 
-    navigateObj: navigateObj
+    navigate: navigate
 };
 
 if (typeof module === "object" && module && isObject(module.exports)) {

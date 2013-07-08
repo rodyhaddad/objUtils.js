@@ -10,7 +10,7 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> v<%= pkg.version %> <%= grunt.template.today("dd-mm-yyyy") %> \n<%= LICENSE %>\n*/\n\n'
             },
             dist: {
-                src: ["src/objectTools.prefix", "src/{common,forEach,mergeObj,makeInherit,navigateObj,publishAPI}.js", "src/exportAPI.js", "src/objectTools.suffix"],
+                src: ["src/objectTools.prefix", "src/{common,forEach,merge,inherit,navigate,publishAPI}.js", "src/exportAPI.js", "src/objectTools.suffix"],
                 dest: 'dist/<%= destName %>.js'
             }
         },

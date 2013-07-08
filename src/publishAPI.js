@@ -11,13 +11,13 @@ var ot = {
 
     forEach: forEach,
 
-    mergeObjects: mergeObjects,
-    mergeObjectsRecursively: mergeObjectsRecursively,
-    mergeObjectsSoftly: mergeObjectsSoftly,
+    merge: merge,
+    deepMerge: deepMerge, mergeRecursively: deepMerge, recursiveMerge: deepMerge,
+    softMerge: softMerge, mergeSoftly: softMerge,
 
-    makeInherit: makeInherit,
-    makeRecursiveInherit: makeRecursiveInherit,
-    makeBoundInherit: makeBoundInherit,
+    inherit: inherit,
+    deepInherit: deepInherit, recursiveInherit: deepInherit, inheritRecursively: deepInherit,
+    boundInherit: boundInherit,
 
-    navigateObj: navigateObj
+    navigate: navigate
 };
