@@ -1,4 +1,4 @@
-/*! objectTools.js v0.6.0 08-07-2013 
+/*! objectTools.js v0.6.0 15-07-2013 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
@@ -127,7 +127,7 @@ function noop(){
  *
  * @param {Object|Array} obj Object to iterate over
  * @param {Function} iterator Iterator function
- * @param [context] The context (`this`) for the iterator function
+ * @param {*} [context] The context (`this`) for the iterator function
  * @returns {*} The obj passed in
  */
 function forEach(obj, iterator, context) {
@@ -187,7 +187,7 @@ function inherit(obj, mergeObj) {
  * @param {Function} fnEachLevel A function that gets called on each level of inherited object
  * @returns {Object} The resulting object
  */
-function recursiveInherit(obj, mergeObj, fnEachLevel, _level) {
+function deepInherit(obj, mergeObj, fnEachLevel, _level) {
     var inheritObj;
     if (isFn(obj)) {
         inheritObj = function () {
@@ -205,11 +205,11 @@ function recursiveInherit(obj, mergeObj, fnEachLevel, _level) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
             if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
-                inheritObj[key] = recursiveInherit(obj[key], null, fnEachLevel, _level + 1);
+                inheritObj[key] = deepInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
     }
-    return mergeObj ? mergeRecursively(inheritObj, mergeObj) : inheritObj;
+    return mergeObj ? deepMerge(inheritObj, mergeObj) : inheritObj;
 }
 
 /**
@@ -221,7 +221,7 @@ function recursiveInherit(obj, mergeObj, fnEachLevel, _level) {
  * @returns {Object} The resulting object
  */
 function boundInherit(obj, mergeObj, fnEachLevel) {
-    return recursiveInherit(obj, mergeObj, function (obj, superObj, level) {
+    return deepInherit(obj, mergeObj, function (obj, superObj, level) {
         if (!isArray(superObj.$$boundChildren)) {
             superObj.$$boundChildren = [];
         }
@@ -261,12 +261,12 @@ function merge(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeRecursively(destination, source) {
+function deepMerge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeRecursively(destination[key], source[key]);
+                    deepMerge(destination[key], source[key]);
                 } else {
                     destination[key] = source[key];
                 }
@@ -284,12 +284,12 @@ function mergeRecursively(destination, source) {
  * @param {Object} source Source Object
  * @returns {Object} The mutated `destination` Object
  */
-function mergeSoftly(destination, source) {
+function softMerge(destination, source) {
     if(destination && source) {
         for(var key in source) {
             if(source.hasOwnProperty(key)) {
                 if(isObject(source[key]) && isObject(destination[key])) {
-                    mergeSoftly(destination[key], source[key]);
+                    softMerge(destination[key], source[key]);
                 } else if(isUndefined(destination[key])) {
                     destination[key] = source[key];
                 }
@@ -449,11 +449,11 @@ var ot = {
     forEach: forEach,
 
     merge: merge,
-    mergeRecursively: mergeRecursively, deepMerge: mergeRecursively, recursiveMerge: mergeRecursively,
-    mergeSoftly: mergeSoftly, softMerge: mergeSoftly,
+    deepMerge: deepMerge, mergeRecursively: deepMerge, recursiveMerge: deepMerge,
+    softMerge: softMerge, mergeSoftly: softMerge,
 
     inherit: inherit,
-    recursiveInherit: recursiveInherit, deepInherit: recursiveInherit, inheritRecursively: recursiveInherit,
+    deepInherit: deepInherit, recursiveInherit: deepInherit, inheritRecursively: deepInherit,
     boundInherit: boundInherit,
 
     navigate: navigate
