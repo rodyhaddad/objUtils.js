@@ -1,4 +1,4 @@
-/*! objectTools.js v0.6.0 19-07-2013 
+/*! objectTools.js v0.7.0 19-07-2013 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
