@@ -114,4 +114,18 @@ describe("The ot object has common methods, which include: ", function () {
         })
     });
 
+    describe("a result method", function () {
+        it("which get the result of a property from an object, calling it if it's a function", function () {
+            var object = {
+                p1: "aValueP1",
+                p2: function (arg1, arg2) {
+                    return 'aValueP2' + arg1 + arg2;
+                }
+            };
+
+            expect(ot.result(object, 'p1')).toBe("aValueP1");
+            expect(ot.result(object, 'p2', ["Ar", "g"])).toBe("aValueP2Arg");
+        })
+    });
+
 });

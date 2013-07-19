@@ -8,6 +8,7 @@ var ot = {
     toArray: toArray,
     cleanArray: cleanArray,
     noop: noop,
+    result: result,
 
     forEach: forEach,
 

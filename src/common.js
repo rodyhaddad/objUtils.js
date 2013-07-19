@@ -54,8 +54,8 @@ function isUndefined(val) {
  * @returns {boolean} Whether the object is empty
  */
 function isEmptyObject(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key)) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
             return false;
         }
     }
@@ -80,8 +80,8 @@ function toArray(obj) {
  * @returns {Array} The cleaned array
  */
 function cleanArray(array, from) {
-    for(var i = array.length - 1; i >= 0; i--) {
-        if(array[i] === from) {
+    for (var i = array.length - 1; i >= 0; i--) {
+        if (array[i] === from) {
             array.splice(i, 1);
         }
     }
@@ -91,6 +91,22 @@ function cleanArray(array, from) {
 /**
  * A function that performs no operations
  */
-function noop(){
+function noop() {
 
+}
+
+/**
+ * If the value of the named property is a function then invoke it with the object as context.
+ * Otherwise, return it.
+ *
+ * @param {Object} object The object to act on
+ * @param {String} property The property to return
+ * @param {Array} args The arguments passed to the value if it's a function
+ * @returns {*} the result
+ */
+function result(object, property, args) {
+    if (object) {
+        var value = object[property];
+        return isFn(value) ? value.apply(object, args) : value;
+    }
 }
