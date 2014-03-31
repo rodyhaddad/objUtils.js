@@ -46,7 +46,7 @@ function deepInherit(obj, mergeObj, fnEachLevel, _level) {
 
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
-            if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
+            if (( isObject(obj[key]) || (isFn(obj[key]) && !isEmptyObject(obj[key])) ) && globalObj !== obj[key] && !isArray(obj[key])) {
                 inheritObj[key] = deepInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
