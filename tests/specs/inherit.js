@@ -30,7 +30,7 @@ describe("The ot object has method which help in inheritance", function () {
                 }
             }
         };
-        objB = ot.recursiveInherit(objA, {
+        objB = ot.deepInherit(objA, {
             p2: {
                 p2_3: true,
                 p2_2: {
@@ -81,6 +81,26 @@ describe("The ot object has method which help in inheritance", function () {
             expect(objB.inheritSuper).toBe(true);
             expect(objB.p2.inheritSuper).toBe(true);
             expect(objB.p2.p2_2.inheritSuper).toBe(true);
+        });
+
+        it("which doesn't inherit a function if it doesn't have user defined properties", function () {
+            var objA = {
+                p1: function(){},
+                p2: {
+                    p3: function(){}
+                }
+            };
+
+            var objB = ot.deepInherit(objA);
+            expect(objB.hasOwnProperty("p1")).toBe(false);
+            expect(objB.p2.hasOwnProperty("p3")).toBe(false);
+
+            objA.p1.prop = true;
+            objA.p2.p3.prop = true;
+
+            var objC = ot.deepInherit(objA);
+            expect(objC.hasOwnProperty("p1")).toBe(true);
+            expect(objC.p2.hasOwnProperty("p3")).toBe(true);
         });
     });
 
