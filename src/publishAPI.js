@@ -18,7 +18,8 @@ var ot = {
 
     inherit: inherit,
     deepInherit: deepInherit, recursiveInherit: deepInherit, inheritRecursively: deepInherit,
-    boundInherit: boundInherit,
+    boundInherit: boundInherit, bindInherit: boundInherit,
+    unbindInherit: unbindInherit,
 
     navigate: navigate
 };

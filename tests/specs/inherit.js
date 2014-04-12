@@ -119,15 +119,39 @@ describe("The ot object has method which help in inheritance", function () {
         };
         objB = ot.boundInherit(objA);
 
-        ot.navigate.set(objA, "p2.p2_2.p2_2_2", true);
-        ot.navigate.set(objA, "p2.p2_2.p2_2_3", {});
-        ot.navigate.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
+        it("which updates bound-inherited children when the parent has a new object", function () {
+            ot.navigate.set(objA, "p2.p2_2.p2_2_2", true);
+            ot.navigate.set(objA, "p2.p2_2.p2_2_3", {});
+            ot.navigate.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
 
-        it("which updates", function () {
             expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
-
             expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(true);
             expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(true);
+        });
+    });
+
+
+    describe("a unbindInherit method", function () {
+        var objA, objB;
+        objA = {
+            p1: true,
+            p2: {
+                p2_1: true,
+                p2_2: {
+                    p2_2_1: true
+                }
+            }
+        };
+        objB = ot.unbindInherit(ot.boundInherit(objA));
+
+        it("which updates bound-inherited children when the parent has a new object", function () {
+            ot.navigate.set(objA, "p2.p2_2.p2_2_2", true);
+            ot.navigate.set(objA, "p2.p2_2.p2_2_3", {});
+            ot.navigate.set(objA, "p2.p2_2.p2_2_4.a.b.c", {d: true});
+
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_2")).toBe(false);
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_3")).toBe(false);
+            expect(ot.navigate.hasOwn(objB, "p2.p2_2.p2_2_4.a.b.c")).toBe(false);
         });
     });
 });

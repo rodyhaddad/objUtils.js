@@ -64,14 +64,41 @@ function deepInherit(obj, mergeObj, fnEachLevel, _level) {
  */
 function boundInherit(obj, mergeObj, fnEachLevel) {
     return deepInherit(obj, mergeObj, function (obj, superObj, level) {
-        if (!isArray(superObj.$$boundChildren)) {
-            superObj.$$boundChildren = [];
+        if (!superObj.hasOwnProperty('$$boundChildren')) {
+            if (isArray(superObj.$$boundChildren)) {
+                var parentChildren = superObj.$$boundChildren;
+                superObj.$$boundChildren = [obj];
+                superObj.$$boundChildren.$$parentChildren = parentChildren;
+            } else {
+                superObj.$$boundChildren = [obj];
+            }
+        } else {
+            superObj.$$boundChildren.push(obj);
         }
-        superObj.$$boundChildren.push(obj);
 
         if (fnEachLevel) {
             fnEachLevel(obj, superObj, level);
         }
 
     });
+}
+
+/**
+ * Unbind an object from it's bound-inherited parent
+ *
+ * @param obj {Object} The object to unbind from its parent
+ * @returns {Object} The resulting object
+ */
+function unbindInherit(obj) {
+    var boundChildren = obj.$$boundChildren;
+    if (obj.hasOwnProperty('$$boundChildren')) {
+        boundChildren = boundChildren.$$parentChildren;
+    }
+    cleanArray(boundChildren, obj, true);
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key) && obj[key] && obj[key].$$boundChildren) {
+            unbindInherit(obj[key]);
+        }
+    }
+    return obj;
 }
