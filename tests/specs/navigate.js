@@ -28,7 +28,7 @@ describe("The ot object has methods which help in objects navigation:", function
             objB = {
                 a: ot.inherit({b: {c: true}})
             },
-            objC = ot.recursiveInherit(objA);
+            objC = ot.deepInherit(objA);
 
         it("which allows you to check that the properties on a road are all owned by an object", function () {
             expect(ot.navigate.hasOwn(objA, "a.b.c.d")).toBe(true);
@@ -76,11 +76,12 @@ describe("The ot object has methods which help in objects navigation:", function
         var objA = {
                 a: {
                     b: {
-                        c: false
+                        c: false,
+                        d: function(){}
                     }
                 }
             },
-            objB = ot.recursiveInherit(objA, {
+            objB = ot.deepInherit(objA, {
                 z: ot.inherit({
                     y: {
                         x: false
@@ -89,8 +90,13 @@ describe("The ot object has methods which help in objects navigation:", function
             });
 
         it("which can set properties while making sure to not go inherited objects", function () {
-            ot.navigate.setOwn(objB, "a.b.d", true);
+            ot.navigate.setOwn(objB, "a.b.e", true);
+
             expect(objB.a.b.hasOwnProperty("c")).toBe(false);
+            expect(objB.a.b.hasOwnProperty("d")).toBe(false);
+            expect(objB.a.b.hasOwnProperty("e")).toBe(true);
+
+            ot.navigate.setOwn(objB, 'a.b.d.f', true);
             expect(objB.a.b.hasOwnProperty("d")).toBe(true);
 
             expect(ot.navigate.hasOwn(objB, "z.y.x")).toBe(false);

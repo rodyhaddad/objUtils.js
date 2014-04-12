@@ -49,7 +49,13 @@ var completeRoad = {
             this[key] = inherit(this[key]);
         }
     },
-    'function': noop,
+    'function': function (value, key, setOwn) {
+        if (setOwn && !this.hasOwnProperty(key)) {
+            // it's a boundInherit because we're returning a function
+            // and its __proto__ can't be the other function
+            this[key] = boundInherit(this[key]);
+        }
+    },
     'null': function (value, key) {
         this[key] = {
             valueOf: function () {
