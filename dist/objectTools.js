@@ -1,4 +1,4 @@
-/*! objectTools.js v0.7.0 19-07-2013 
+/*! objectTools.js v0.7.0 12-04-2014 
 The MIT License (MIT)
 
 Copyright (c) 2013 rodyhaddad
@@ -103,12 +103,16 @@ function toArray(obj) {
  *
  * @param array An array to clean
  * @param from What should be removed from the array
+ * @param once If true, will stop at the first occurrence of `from`
  * @returns {Array} The cleaned array
  */
-function cleanArray(array, from) {
+function cleanArray(array, from, once) {
     for (var i = array.length - 1; i >= 0; i--) {
         if (array[i] === from) {
             array.splice(i, 1);
+            if (once) {
+                break;
+            }
         }
     }
     return array;
@@ -220,7 +224,7 @@ function deepInherit(obj, mergeObj, fnEachLevel, _level) {
 
     for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
-            if (( isFn(obj[key]) || isObject(obj[key]) ) && globalObj !== obj[key] && !isArray(obj[key])) {
+            if (( isObject(obj[key]) || (isFn(obj[key]) && !isEmptyObject(obj[key])) ) && globalObj !== obj[key] && !isArray(obj[key])) {
                 inheritObj[key] = deepInherit(obj[key], null, fnEachLevel, _level + 1);
             }
         }
@@ -238,16 +242,43 @@ function deepInherit(obj, mergeObj, fnEachLevel, _level) {
  */
 function boundInherit(obj, mergeObj, fnEachLevel) {
     return deepInherit(obj, mergeObj, function (obj, superObj, level) {
-        if (!isArray(superObj.$$boundChildren)) {
-            superObj.$$boundChildren = [];
+        if (!superObj.hasOwnProperty('$$boundChildren')) {
+            if (isArray(superObj.$$boundChildren)) {
+                var parentChildren = superObj.$$boundChildren;
+                superObj.$$boundChildren = [obj];
+                superObj.$$boundChildren.$$parentChildren = parentChildren;
+            } else {
+                superObj.$$boundChildren = [obj];
+            }
+        } else {
+            superObj.$$boundChildren.push(obj);
         }
-        superObj.$$boundChildren.push(obj);
 
         if (fnEachLevel) {
             fnEachLevel(obj, superObj, level);
         }
 
     });
+}
+
+/**
+ * Unbind an object from it's bound-inherited parent
+ *
+ * @param obj {Object} The object to unbind from its parent
+ * @returns {Object} The resulting object
+ */
+function unbindInherit(obj) {
+    var boundChildren = obj.$$boundChildren;
+    if (obj.hasOwnProperty('$$boundChildren')) {
+        boundChildren = boundChildren.$$parentChildren;
+    }
+    cleanArray(boundChildren, obj, true);
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key) && obj[key] && obj[key].$$boundChildren) {
+            unbindInherit(obj[key]);
+        }
+    }
+    return obj;
 }
 
 /**
@@ -366,7 +397,13 @@ var completeRoad = {
             this[key] = inherit(this[key]);
         }
     },
-    'function': noop,
+    'function': function (value, key, setOwn) {
+        if (setOwn && !this.hasOwnProperty(key)) {
+            // it's a boundInherit because we're returning a function
+            // and its __proto__ can't be the other function
+            this[key] = boundInherit(this[key]);
+        }
+    },
     'null': function (value, key) {
         this[key] = {
             valueOf: function () {
@@ -471,7 +508,8 @@ var ot = {
 
     inherit: inherit,
     deepInherit: deepInherit, recursiveInherit: deepInherit, inheritRecursively: deepInherit,
-    boundInherit: boundInherit,
+    boundInherit: boundInherit, bindInherit: boundInherit,
+    unbindInherit: unbindInherit,
 
     navigate: navigate
 };
