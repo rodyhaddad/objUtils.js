@@ -112,6 +112,13 @@ describe("The ot object has common methods, which include: ", function () {
 
             expect(ot.cleanArray(".test.ing.".split("."), "")).toEqual(["test", "ing"]);
         })
+
+        it("which stops at the first occurrence of what we're cleaning the array from", function () {
+            var array = [1, 1, 1];
+            expect(ot.cleanArray(array, 1, true)).toEqual([1, 1]);
+            expect(ot.cleanArray(array, 1, true)).toEqual([1]);
+            expect(ot.cleanArray(array, 1, true)).toEqual([]);
+        })
     });
 
     describe("a result method", function () {

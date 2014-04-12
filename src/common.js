@@ -77,12 +77,16 @@ function toArray(obj) {
  *
  * @param array An array to clean
  * @param from What should be removed from the array
+ * @param once If true, will stop at the first occurrence of `from`
  * @returns {Array} The cleaned array
  */
-function cleanArray(array, from) {
+function cleanArray(array, from, once) {
     for (var i = array.length - 1; i >= 0; i--) {
         if (array[i] === from) {
             array.splice(i, 1);
+            if (once) {
+                break;
+            }
         }
     }
     return array;
