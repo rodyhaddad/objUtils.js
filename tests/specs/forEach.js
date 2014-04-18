@@ -38,10 +38,8 @@ describe("The ot object has a forEach method, which allows you: ", function () {
         fnWithProps.prop1 = false;
         fnWithProps.prop2 = false;
         fnWithProps.prop3 = false;
-        var forbiddenProps = ["prototype", "name", "length"];
 
         ot.forEach(fnWithProps, function (value, key) {
-            expect(forbiddenProps).not.toContain(key);
             fnWithProps[key] = !value;
             expect(this.context).toBe(true);
         }, {context: true});
