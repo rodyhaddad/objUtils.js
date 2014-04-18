@@ -40,6 +40,11 @@ module.exports = function (grunt) {
                 files: '<%= concat.dist.src %>',
                 tasks: ['jshint', 'concat', 'uglify']
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
+            }
         }
     });
 
@@ -47,10 +52,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('lint', ['jshint']);
 
     grunt.registerTask('minify', ['concat', 'uglify']);
+
+    grunt.registerTask('autotest', ['karma:unit']);
 
     grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 
